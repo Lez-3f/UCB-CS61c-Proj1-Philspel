@@ -46,6 +46,11 @@ int main(int argc, char **argv) {
   /*
    * Allocate a hash table to store the dictionary.
    */
+  // freopen("Input.txt", "r", stdout);
+  // freopen("Output.txt", "w", stdout);
+
+  fprintf(stderr, "Successfully redirect the stdin/stdout\n");
+
   fprintf(stderr, "Creating hashtable\n");
   dictionary = createHashTable(2255, &stringHash, &stringEquals);
 
@@ -71,6 +76,19 @@ int main(int argc, char **argv) {
 unsigned int stringHash(void *s) {
   char *string = (char *)s;
   // -- TODO --
+  unsigned int hash = 0;
+  int i = 0;
+  while (string[i] != '\0'){
+    if (string[i] >= 'a' && string[i] <= 'z'){
+      hash += string[i] - 'a';
+    }
+    else{
+      hash += string[i] = 'A';
+    }
+    hash <<= 4;
+    ++i;
+  }
+  return hash;
 }
 
 /*
@@ -81,6 +99,14 @@ int stringEquals(void *s1, void *s2) {
   char *string1 = (char *)s1;
   char *string2 = (char *)s2;
   // -- TODO --
+  // int i = 0;
+  // while(string1[i] != '\0' && string1[i] == string2[i]){ i++; }
+  // if (string1[i] == '\0' && string2[i] == '\0'){
+  //   return 1;
+  // }
+  // //else
+  // return 0;
+  return strcmp(s1, s2) == 0;
 }
 
 /*
@@ -101,6 +127,17 @@ int stringEquals(void *s1, void *s2) {
  */
 void readDictionary(char *dictName) {
   // -- TODO --
+  FILE * fp = fopen(dictName, "r");
+  char new_word[60];
+
+  while (fscanf(fp, "%s",  new_word) != EOF){
+    // printf("new word: %s\n", new_word);
+    insertData(dictionary, new_word, new_word);
+  }
+  // printf("%s", (char*)findData(dictionary, (char *)"this"));
+  // printf("%s", (char*)findData(dictionary, (char *)"words"));
+
+  fclose(fp);
 }
 
 /*
@@ -124,6 +161,37 @@ void readDictionary(char *dictName) {
  * numbers and punctuation) which are longer than 60 characters. Again, for the 
  * final 20% of your grade, you cannot assume words have a bounded length.
  */
+
 void processInput() {
   // -- TODO --
+  const int length = 100;
+  char* word = (char*) malloc(sizeof(char) * length);
+  char ch;
+
+  int idx = 0;
+  while((ch = getchar()) != EOF){
+    if (isalpha(ch)){
+      word[idx++] = ch;
+    }
+    // ch is not a alpha
+    else if (idx > 0){
+      word[idx] = '\0';
+
+      // only check whether the word itself is in the dict
+      char * res = findData(dictionary, word);
+      if (res){
+        printf("%s", word);
+      }else{
+        //unfind
+        printf("%s [sic]", word);
+      }
+
+      idx = 0;
+      putchar(ch);
+    }
+    else{
+        putchar(ch);
+    }
+  }
 }
+
