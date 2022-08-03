@@ -1,3 +1,3 @@
-# su20-proj1-starter
+# UCB-CS61c-Proj1-Philspel
 
-Please add a description about what you created! Also add lessons you learned or bugs you encountered. 
+A spellcheck Written in C.
